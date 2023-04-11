@@ -1,14 +1,20 @@
-module test_coins::coins {
+module movement_dex::coins {
     use std::signer;
     use std::string::utf8;
 
     use aptos_framework::coin::{Self, MintCapability, BurnCapability};
 
-    /// Represents test USDT coin.
-    struct USDT {}
+    /// Represents test AVAX coin.
+    struct AVAX {}
+
+    /// Represents test USDC coin.
+    struct USDC {}
 
     /// Represents test BTC coin.
     struct BTC {}
+
+    /// Represents test ETH coin.
+    struct ETH {}
 
     /// Storing mint/burn capabilities for `USDT` and `BTC` coins under user account.
     struct Caps<phantom CoinType> has key {
@@ -18,18 +24,24 @@ module test_coins::coins {
 
     /// Initializes `BTC` and `USDT` coins.
     public entry fun register_coins(token_admin: &signer) {
-        let (btc_b, btc_f, btc_m) =
-            coin::initialize<BTC>(token_admin,
-                utf8(b"Bitcoin"), utf8(b"BTC"), 8, true);
-        let (usdt_b, usdt_f, usdt_m) =
-            coin::initialize<USDT>(token_admin,
-                utf8(b"Tether"), utf8(b"USDT"), 6, true);
+        init_coin<AVAX>(token_admin, b"Avalanche", b"AVAX", 8);
+        init_coin<USDC>(token_admin, b"USD Coin", b"USDC", 8);
+        init_coin<BTC>(token_admin, b"Bitcoin", b"BTC", 8);
+        init_coin<ETH>(token_admin, b"Ethereum", b"ETH", 8);
+    }
 
-        coin::destroy_freeze_cap(btc_f);
-        coin::destroy_freeze_cap(usdt_f);
+    public fun init_coin<CoinType>(
+        token_admin: &signer,
+        name: vector<u8>,
+        symbol: vector<u8>,
+        decimals: u8,
+    ) {
+        let (burn, freeze, mint) =
+            coin::initialize<CoinType>(token_admin, utf8(name), utf8(symbol), decimals, true);
 
-        move_to(token_admin, Caps<BTC> { mint: btc_m, burn: btc_b });
-        move_to(token_admin, Caps<USDT> { mint: usdt_m, burn: usdt_b });
+        coin::destroy_freeze_cap(freeze);
+
+        move_to(token_admin, Caps<CoinType> { mint, burn });
     }
 
     /// Mints new coin `CoinType` on account `acc_addr`.
