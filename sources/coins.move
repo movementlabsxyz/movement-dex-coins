@@ -51,4 +51,18 @@ module movement_dex::coins {
         let coins = coin::mint<CoinType>(amount, &caps.mint);
         coin::deposit(acc_addr, coins);
     }
+
+    public entry fun faucet<CoinType>(user: &signer, amount: u64) acquires Caps {
+        let caps = borrow_global<Caps<CoinType>>(@movement_dex);
+        let user_addr = signer::address_of(user);
+        if(!coin::is_account_registered<CoinType>(user_addr)) {
+            coin::register<CoinType>(user);
+        };
+        let coins = coin::mint<CoinType>(amount, &caps.mint);
+        coin::deposit(user_addr, coins);
+    }
+
+    public entry fun register<CoinType>(user: &signer) {
+        coin::register<CoinType>(user);
+    }
 }
