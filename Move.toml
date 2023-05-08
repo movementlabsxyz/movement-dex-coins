@@ -8,7 +8,7 @@ rev = '985f19d40457a5f09f2d741b1feca6bf7ba1f8a6'
 subdir = 'aptos-move/framework/aptos-framework'
 
 [addresses]
-movement_dex = "0xd0d068848da0d8b1eec5755c048142c8efecf8a2ac9e319d6f502358535f2590"
+movement_dex = "0x895cff28180ccdd3746a22a5e8ff929060d4ae58510a97662d90339100ed75c7"
 
-test_token_admin = "0xd0d068848da0d8b1eec5755c048142c8efecf8a2ac9e319d6f502358535f2590"
+test_token_admin = "0x895cff28180ccdd3746a22a5e8ff929060d4ae58510a97662d90339100ed75c7"
 test_account = "0x15"
